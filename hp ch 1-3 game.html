@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bio-Medical Sciences Certification</title>
+    <style>
+        :root {
+            --primary: #1a252f;
+            --secondary: #3498db;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --light: #f4f7f6;
+            --gold: #c5a059;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--light);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--primary);
+        }
+
+        #stats-bar {
+            background: var(--primary);
+            color: white;
+            width: 100%;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-around;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        #game-container {
+            width: 95%;
+            max-width: 900px;
+            background: white;
+            margin: 30px 0;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .hidden { display: none !important; }
+
+        .input-group { margin: 20px 0; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        input { padding: 12px; font-size: 16px; border: 2px solid #ddd; border-radius: 8px; text-align: center; width: 200px; }
+        
+        .btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: 0.3s;
+            margin: 10px;
+        }
+        .btn:hover { background: #2980b9; transform: translateY(-2px); }
+        
+        .btn-option {
+            background: #fff;
+            color: var(--primary);
+            border: 2px solid var(--secondary);
+            width: 100%;
+            max-width: 500px;
+            text-align: left;
+            margin: 8px auto;
+            display: block;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.2s;
+        }
+        .btn-option:hover { background: #eef7ff; border-color: #2980b9; }
+
+        .rules-box {
+            background: #eef2f3;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px auto;
+            max-width: 450px;
+            font-size: 15px;
+            color: #555;
+            text-align: left;
+        }
+
+        #body-map {
+            position: relative;
+            width: 300px;
+            height: 500px;
+            margin: 0 auto;
+            background: #eee;
+            border-radius: 50px;
+            border: 5px solid var(--primary);
+        }
+        .target-zone {
+            position: absolute;
+            background: rgba(52, 152, 219, 0.2);
+            border: 2px dashed var(--secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .tissue-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
+        .tissue-bin { border: 3px solid var(--primary); padding: 15px; min-height: 120px; border-radius: 10px; background: #f9f9f9; }
+        .card {
+            background: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            cursor: grab;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--secondary);
+            font-size: 14px;
+        }
+
+        .case-box {
+            background: #fffbe6;
+            border: 2px solid #ffe58f;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: left;
+            margin-bottom: 20px;
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        .feedback { margin: 15px; font-weight: bold; height: 25px; font-size: 18px; }
+
+        #certificate {
+            width: 650px;
+            padding: 50px;
+            border: 20px double var(--gold);
+            background: white;
+            color: #333;
+            text-align: center;
+            margin: 20px auto;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0,0,0,0.2);
+        }
+        #certificate h1 { font-family: 'Georgia', serif; font-size: 50px; color: var(--primary); margin: 0; }
+        #certificate .user-name { font-size: 32px; font-weight: bold; text-decoration: underline; margin: 25px 0; }
+        .seal {
+            width: 100px;
+            height: 100px;
+            background: var(--gold);
+            border-radius: 50%;
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            color: white;
+            border: 5px double white;
+            transform: rotate(-10deg);
+            text-align: center;
+        }
+        .classroom-instr {
+            background: #ffebee;
+            padding: 15px;
+            border-left: 5px solid var(--danger);
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #c62828;
+        }
+        .cert-stat {
+            font-size: 24px;
+            margin: 10px;
+            display: inline-block;
+            font-weight: bold;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="stats-bar" class="hidden">
+        <div>Student: <span id="stat-name"></span></div>
+        <div>Progression: <span id="stat-level">1/6</span></div>
+        <div id="stat-adjustment">Adjustment: 0s</div>
+        <div>Timer: <span id="stat-timer">00:00</span></div>
+    </div>
+
+    <div id="game-container">
+        <div id="start-screen">
+            <h1>Bio-Medical Certification</h1>
+            <p>Comprehensive Exam: Anatomy, Histology & Basic Chemistry</p>
+            
+            <div class="rules-box">
+                <strong style="font-size: 17px;">⏱️ Time-Based Proficiency System:</strong><br><br>
+                The goal is to finish with the <strong>lowest adjusted time</strong> possible.<br><br>
+                ✅ <strong>Correct Answer:</strong> <span style="color:green">-10 seconds</strong> (Time Bonus)<br>
+                ❌ <strong>Incorrect Answer:</strong> <span style="color:red">+20 seconds</strong> (Time Penalty)<br><br>
+                <em style="font-size: 13px;">Final Time = Actual Time + Penalties - Bonuses.</em>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="fname" placeholder="First Name">
+                <input type="text" id="lname" placeholder="Last Initial" maxlength="1">
+            </div>
+            <button class="btn" onclick="startGame()">Initialize Examination</button>
+            <br>
+            <button class="btn" style="background:#ccc; font-size: 10px; padding: 5px 10px;" onclick="skipToFive()">Teacher Mode (L5)</button>
+        </div>
+
+        <!-- L1-L5 stay same as previous -->
+        <div id="level1" class="hidden">
+            <h3>Level 1: Directional Terms</h3>
+            <p id="l1-instruction"></p>
+            <div id="body-map">
+                <div class="target-zone" style="top: 10%; left: 30%; width: 40%; height: 15%;" data-zone="superior">Cephalic</div>
+                <div class="target-zone" style="top: 30%; left: 35%; width: 30%; height: 15%;" data-zone="thoracic">Thoracic</div>
+                <div class="target-zone" style="top: 50%; left: 35%; width: 30%; height: 15%;" data-zone="abdominal">Abdominal</div>
+                <div class="target-zone" style="top: 70%; left: 20%; width: 20%; height: 20%;" data-zone="distal">L-Leg</div>
+                <div class="target-zone" style="top: 70%; left: 60%; width: 20%; height: 20%;" data-zone="distal">R-Leg</div>
+            </div>
+            <div class="feedback" id="l1-feedback"></div>
+        </div>
+
+        <div id="level2" class="hidden">
+            <h3>Level 2: Primary Tissue Classification</h3>
+            <p>Categorize the descriptions into the four primary tissue types.</p>
+            <div id="card-container">
+                <div class="card" draggable="true" id="c1" data-type="epithelial">Simple Squamous: Filtration/Diffusion</div>
+                <div class="card" draggable="true" id="c2" data-type="connective">Adipose: Energy storage & Insulation</div>
+                <div class="card" draggable="true" id="c3" data-type="muscle">Cardiac: Intercalated discs, involuntary</div>
+                <div class="card" draggable="true" id="c4" data-type="nervous">Neurons: Electrical signaling</div>
+                <div class="card" draggable="true" id="c5" data-type="epithelial">Stratified Squamous: Protection (Skin)</div>
+                <div class="card" draggable="true" id="c6" data-type="connective">Hyaline Cartilage: Ends of long bones</div>
+            </div>
+            <div class="tissue-grid">
+                <div class="tissue-bin" data-bin="epithelial"><strong>Epithelial</strong></div>
+                <div class="tissue-bin" data-bin="connective"><strong>Connective</strong></div>
+                <div class="tissue-bin" data-bin="muscle"><strong>Muscle</strong></div>
+                <div class="tissue-bin" data-bin="nervous"><strong>Nervous</strong></div>
+            </div>
+            <div class="feedback" id="l2-feedback"></div>
+        </div>
+
+        <div id="level3" class="hidden">
+            <h3>Level 3: Tissue-Location Match</h3>
+            <p id="l3-question"></p>
+            <div id="l3-options"></div>
+            <div class="feedback" id="l3-feedback"></div>
+        </div>
+
+        <div id="level4" class="hidden">
+            <h3>Level 4: Anatomical Slicing & Cavities</h3>
+            <p id="l4-question"></p>
+            <div id="l4-options"></div>
+            <div class="feedback" id="l4-feedback"></div>
+        </div>
+
+        <div id="level5" class="hidden">
+            <h3>Level 5: Clinical Case Applications</h3>
+            <div id="l5-case" class="case-box"></div>
+            <div id="l5-options"></div>
+            <div class="feedback" id="l5-feedback"></div>
+        </div>
+
+        <!-- NEW LEVEL 6: CHEMISTRY -->
+        <div id="level6" class="hidden">
+            <h3>Level 6: Basic Bio-Chemistry</h3>
+            <p>Covalent Bonds, Molecules, and Hydrocarbons</p>
+            <p id="l6-question" style="font-weight: bold; font-size: 18px;"></p>
+            <div id="l6-options"></div>
+            <div class="feedback" id="l6-feedback"></div>
+        </div>
+
+        <div id="end-screen" class="hidden">
+            <div class="classroom-instr">
+                📸 FINAL STEP: Screenshot your certificate and attach it to the Google Classroom assignment for credit.
+            </div>
+            <div id="certificate">
+                <h1>CERTIFICATION</h1>
+                <h2>of Bio-Medical Proficiency</h2>
+                <p>This is to certify that</p>
+                <div class="user-name" id="cert-name"></div>
+                <p>has successfully completed the advanced modules in</p>
+                <div style="font-weight: bold; font-size: 22px;">Anatomy, Histology & Basic Chemistry</div>
+                
+                <div style="margin-top:30px;">
+                    <div class="cert-stat">Adjusted Completion Time: <span id="cert-time"></span></div>
+                </div>
+                
+                <div class="seal">BIO-MED<br>VALIDATED</div>
+            </div>
+            <button class="btn" onclick="location.reload()">Restart Exam</button>
+        </div>
+    </div>
+
+    <script>
+        let timeAdjustment = 0;
+        let mistakes = 0;
+        let timerSeconds = 0;
+        let timerInterval;
+        let userName = "";
+
+        const l1Questions = [
+            { text: "Identify the area SUPERIOR to the heart!", correct: "superior" },
+            { text: "Identify the area INFERIOR to the diaphragm!", correct: "abdominal" },
+            { text: "Identify a DISTAL point relative to the torso!", correct: "distal" },
+            { text: "Identify the THORACIC region!", correct: "thoracic" }
+        ];
+        let currentL1 = 0;
+
+        const l3Questions = [
+            { q: "Where would you find Simple Columnar epithelium?", options: ["Alveoli", "Digestive Tract Lining", "Skin", "Bladder"], correct: 1 },
+            { q: "Which tissue lines the bladder and allows stretching?", options: ["Stratified Squamous", "Simple Cuboidal", "Transitional Epithelium", "Dense Connective"], correct: 2 },
+            { q: "Where is Dense Regular Connective tissue most prominent?", options: ["Tendons/Ligaments", "Dermis of Skin", "Fat deposits", "Cartilage"], correct: 0 }
+        ];
+        let currentL3 = 0;
+
+        const l4Questions = [
+            { q: "Which plane divides the body into Left and Right halves?", options: ["Transverse", "Frontal", "Sagittal", "Oblique"], correct: 2 },
+            { q: "A slice that separates the Anterior from the Posterior is called:", options: ["Frontal/Coronal", "Sagittal", "Transverse", "Midsagittal"], correct: 0 },
+            { q: "The Pleural cavity is located within the:", options: ["Abdominal Cavity", "Thoracic Cavity", "Pelvic Cavity", "Cranial Cavity"], correct: 1 }
+        ];
+        let currentL4 = 0;
+
+        const l5Questions = [
+            { case: "PATIENT A: Presents with acute pain in the 'Hypogastric region'. Where is the physician focusing their exam?", options: ["Upper middle abdomen", "Lower middle abdomen", "Right lower quadrant", "Thoracic outlet"], correct: 1 },
+            { case: "PATIENT B: A biopsy of the trachea reveals 'Pseudostratified Ciliated Columnar Epithelium'. What is the primary function here?", options: ["Absorption of nutrients", "Protection from friction", "Moving mucus/particles", "Rapid diffusion of gas"], correct: 2 },
+            { case: "PATIENT C: An MRI shows a lesion on the 'Deep' side of the fascia, 'Proximal' to the elbow. Where is the lesion?", options: ["Closer to the hand", "Closer to the shoulder", "On the surface of the skin", "In the distal forearm"], correct: 1 }
+        ];
+        let currentL5 = 0;
+
+        // NEW LEVEL 6 DATA: 15 Questions
+        const l6Questions = [
+            { q: "A covalent bond is formed when two atoms do what?", options: ["Exchange electrons", "Share electrons", "Attract each other via magnets", "Repel electrons"], correct: 1 },
+            { q: "Which of these is a polar covalent molecule?", options: ["Oxygen (O2)", "Hydrogen (H2)", "Water (H2O)", "Nitrogen (N2)"], correct: 2 },
+            { q: "What is the chemical formula for Glucose?", options: ["H2O", "CO2", "C6H12O6", "NaCl"], correct: 2 },
+            { q: "A hydrocarbon is a molecule consisting only of:", options: ["Carbon and Oxygen", "Carbon and Hydrogen", "Nitrogen and Hydrogen", "Carbon and Sulfur"], correct: 1 },
+            { q: "Which of these is the simplest hydrocarbon (one carbon)?", options: ["Ethane", "Propane", "Methane", "Butane"], correct: 2 },
+            { q: "Saturated hydrocarbons contain only which type of carbon-carbon bonds?", options: ["Double bonds", "Triple bonds", "Single bonds", "Ionic bonds"], correct: 2 },
+            { q: "Unsaturated hydrocarbons contain at least one:", options: ["Single bond", "Double or Triple bond", "Hydrogen bond", "Covalent salt"], correct: 1 },
+            { q: "How many valence electrons does Carbon typically have to share?", options: ["2", "4", "6", "8"], correct: 1 },
+            { q: "Which molecule is primarily responsible for the 'greenhouse effect'?", options: ["O2", "H2O", "CO2", "N2"], correct: 2 },
+            { q: "A non-polar covalent bond occurs when electrons are:", options: ["Shared equally", "Shared unequally", "Transferred completely", "Not shared at all"], correct: 0 },
+            { q: "Which of these is a biological molecule based on hydrocarbon chains?", options: ["Water", "Lipids (Fats)", "Simple Salts", "Oxygen"], correct: 1 },
+            { q: "What is the name of a hydrocarbon with a double bond?", options: ["Alkane", "Alkene", "Alkyne", "Alkohol"], correct: 1 },
+            { q: "What is the name of a hydrocarbon with a triple bond?", options: ["Alkane", "Alkene", "Alkyne", "Alkohol"], correct: 2 },
+            { q: "Which bond is generally stronger: a Covalent bond or a Hydrogen bond?", options: ["Hydrogen bond", "Covalent bond", "They are equal", "Neither is strong"], correct: 1 },
+            { q: "Water's polarity allows it to form what special type of attraction between molecules?", options: ["Ionic bond", "Covalent bond", "Hydrogen bond", "Metallic bond"], correct: 2 }
+        ];
+        let currentL6 = 0;
+
+        function updateTime(isCorrect) {
+            if(isCorrect) {
+                timeAdjustment -= 10; 
+            } else {
+                timeAdjustment += 20; 
+            }
+            document.getElementById('stat-adjustment').innerText = `Adjustment: ${timeAdjustment >= 0 ? '+' : ''}${timeAdjustment}s`;
+        }
+
+        function startGame() {
+            const fn = document.getElementById('fname').value;
+            const ln = document.getElementById('lname').value;
+            if(!fn || !ln) return alert("Enter name and initial!");
+
+            userName = `${fn} ${ln.toUpperCase()}.`;
+            document.getElementById('stat-name').innerText = userName;
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('stats-bar').classList.remove('hidden');
+            
+            startTimer();
+            startLevel(1);
+        }
+
+        function skipToFive() {
+            const fn = document.getElementById('fname').value || "Teacher";
+            const ln = document.getElementById('lname').value || "T";
+            userName = `${fn} ${ln.toUpperCase()}.`;
+            document.getElementById('stat-name').innerText = userName;
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('stats-bar').classList.remove('hidden');
+            startTimer();
+            startLevel(5);
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timerSeconds++;
+                let mins = Math.floor(timerSeconds / 60);
+                let secs = timerSeconds % 60;
+                document.getElementById('stat-timer').innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function startLevel(lvl) {
+            for(let i=1; i<=6; i++) {
+                document.getElementById(`level${i}`).classList.add('hidden');
+            }
+            document.getElementById('stat-level').innerText = `${lvl}/6`;
+            
+            if(lvl === 1) {
+                document.getElementById('level1').classList.remove('hidden');
+                loadL1();
+            } else if (lvl === 2) {
+                document.getElementById('level2').classList.remove('hidden');
+                initL2();
+            } else if (lvl === 3) {
+                document.getElementById('level3').classList.remove('hidden');
+                loadMCQ(3, l3Questions, 'l3-question', 'l3-options', 'l3-feedback', 4);
+            } else if (lvl === 4) {
+                document.getElementById('level4').classList.remove('hidden');
+                loadMCQ(4, l4Questions, 'l4-question', 'l4-options', 'l4-feedback', 5);
+            } else if (lvl === 5) {
+                document.getElementById('level5').classList.remove('hidden');
+                loadMCQ(5, l5Questions, 'l5-case', 'l5-options', 'l5-feedback', 6, true);
+            } else if (lvl === 6) {
+                document.getElementById('level6').classList.remove('hidden');
+                loadMCQ(6, l6Questions, 'l6-question', 'l6-options', 'l6-feedback', 7);
+            } else if (lvl === 7) {
+                showEndScreen();
+            }
+        }
+
+        function loadL1() {
+            if(currentL1 < l1Questions.length) {
+                document.getElementById('l1-instruction').innerHTML = l1Questions[currentL1].text;
+            } else {
+                startLevel(2);
+            }
+        }
+
+        document.querySelectorAll('.target-zone').forEach(zone => {
+            zone.addEventListener('click', function() {
+                if(this.dataset.zone === l1Questions[currentL1].correct) {
+                    updateTime(true);
+                    document.getElementById('l1-feedback').innerText = "Correct! -10s bonus ✅";
+                    currentL1++;
+                    setTimeout(() => { document.getElementById('l1-feedback').innerText = ""; loadL1(); }, 800);
+                } else {
+                    updateTime(false);
+                    mistakes++;
+                    document.getElementById('l1-feedback').innerText = "Incorrect! +20s penalty ❌";
+                    if(mistakes >= 4) startLevel(2);
+                }
+            });
+        });
+
+        function initL2() {
+            const cards = document.querySelectorAll('.card');
+            const bins = document.querySelectorAll('.tissue-bin');
+            cards.forEach(card => {
+                card.addEventListener('dragstart', (e) => e.dataTransfer.setData('text', e.target.id));
+            });
+            bins.forEach(bin => {
+                bin.addEventListener('dragover', (e) => e.preventDefault());
+                bin.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const card = document.getElementById(e.dataTransfer.getData('text'));
+                    if(card.dataset.type === bin.dataset.bin) {
+                        bin.appendChild(card);
+                        updateTime(true);
+                        document.getElementById('l2-feedback').innerText = "Correct! -10s bonus ✅";
+                    } else {
+                        updateTime(false);
+                        document.getElementById('l2-feedback').innerText = "Wrong! +20s penalty ❌";
+                    }
+                    if(document.getElementById('card-container').children.length === 0) startLevel(3);
+                });
+            });
+        }
+
+        function loadMCQ(lvl, questions, questId, optionsId, feedbackId, nextLvl, isCase = false) {
+            let currentIdx;
+            if(lvl===3) currentIdx = currentL3;
+            else if(lvl===4) currentIdx = currentL4;
+            else if(lvl===5) currentIdx = currentL5;
+            else currentIdx = currentL6;
+
+            if(currentIdx < questions.length) {
+                const q = questions[currentIdx];
+                const qEl = document.getElementById(questId);
+                qEl.innerHTML = isCase ? q.case : q.q;
+                const optEl = document.getElementById(optionsId);
+                optEl.innerHTML = "";
+                q.options.forEach((opt, i) => {
+                    const btn = document.createElement('button');
+                    btn.className = "btn btn-option";
+                    btn.innerText = opt;
+                    btn.onclick = () => {
+                        if(i === q.correct) {
+                            updateTime(true);
+                            document.getElementById(feedbackId).innerText = "Correct! -10s bonus ✅";
+                            if(lvl === 3) currentL3++;
+                            if(lvl === 4) currentL4++;
+                            if(lvl === 5) currentL5++;
+                            if(lvl === 6) currentL6++;
+                            setTimeout(() => {
+                                document.getElementById(feedbackId).innerText = "";
+                                loadMCQ(lvl, questions, questId, optionsId, feedbackId, nextLvl, isCase);
+                            }, 1000);
+                        } else {
+                            updateTime(false);
+                            document.getElementById(feedbackId).innerText = "Incorrect! +20s penalty ❌";
+                            document.querySelectorAll('.btn-option').forEach(b => b.disabled = true);
+                            setTimeout(() => {
+                                document.querySelectorAll('.btn-option').forEach(b => b.disabled = false);
+                                document.getElementById(feedbackId).innerText = "";
+                            }, 2000);
+                        }
+                    };
+                    optEl.appendChild(btn);
+                });
+            } else {
+                startLevel(nextLvl);
+            }
+        }
+
+        function formatTime(totalSeconds) {
+            if (totalSeconds < 0) totalSeconds = 0;
+            let mins = Math.floor(totalSeconds / 60);
+            let secs = totalSeconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function showEndScreen() {
+            clearInterval(timerInterval);
+            for(let i=1; i<=6; i++) {
+                document.getElementById(`level${i}`).classList.add('hidden');
+            }
+            document.getElementById('stats-bar').classList.add('hidden');
+            document.getElementById('end-screen').classList.remove('hidden');
+            
+            let finalSeconds = timerSeconds + timeAdjustment;
+            
+            document.getElementById('cert-name').innerText = userName;
+            document.getElementById('cert-time').innerText = formatTime(finalSeconds);
+        }
+    </script>
+</body>
+</html>
